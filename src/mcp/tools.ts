@@ -12,7 +12,13 @@ import type { Product, ProductItem } from '../api/types.js';
 const SearchProductsInput = {
   term: z.string().min(1).describe('Search term (e.g., "milk", "organic bananas")'),
   locationId: z.string().min(1).describe('Store location ID (get from find_stores)'),
-  limit: z.number().int().min(1).max(50).default(10).describe('Maximum results (default: 10, max: 50)'),
+  limit: z
+    .number()
+    .int()
+    .min(1)
+    .max(50)
+    .default(10)
+    .describe('Maximum results (default: 10, max: 50)'),
   availabilityMode: z
     .enum(['actionable', 'in_stock_only', 'all'])
     .default('actionable')
@@ -35,8 +41,17 @@ const GetProductInput = {
 };
 
 const FindStoresInput = {
-  zipCode: z.string().regex(/^\d{5}$/, 'ZIP code must be 5 digits').describe('5-digit ZIP code'),
-  limit: z.number().int().min(1).max(20).default(5).describe('Maximum results (default: 5, max: 20)'),
+  zipCode: z
+    .string()
+    .regex(/^\d{5}$/, 'ZIP code must be 5 digits')
+    .describe('5-digit ZIP code'),
+  limit: z
+    .number()
+    .int()
+    .min(1)
+    .max(20)
+    .default(5)
+    .describe('Maximum results (default: 5, max: 20)'),
 };
 
 const GetStoreInput = {
@@ -44,7 +59,10 @@ const GetStoreInput = {
 };
 
 const CartItemInput = z.object({
-  upc: z.string().regex(/^\d{13}$/, 'UPC must be 13 digits').describe('Product UPC (13 digits)'),
+  upc: z
+    .string()
+    .regex(/^\d{13}$/, 'UPC must be 13 digits')
+    .describe('Product UPC (13 digits)'),
   quantity: z.number().int().min(1, 'Quantity must be at least 1').describe('Quantity to add'),
   modality: z.enum(['PICKUP', 'DELIVERY']).optional().describe('Fulfillment method'),
 });
@@ -52,7 +70,10 @@ const CartItemInput = z.object({
 const GetProfileInput = {};
 
 const AddToCartInput = {
-  items: z.array(CartItemInput).min(1, 'At least one item is required').describe('Items to add to cart'),
+  items: z
+    .array(CartItemInput)
+    .min(1, 'At least one item is required')
+    .describe('Items to add to cart'),
 };
 
 const PreviewCartInput = {
@@ -96,12 +117,14 @@ const ProductDetailOutput = {
   price: z.object({ regular: z.number().optional(), promo: z.number().optional() }).optional(),
   size: z.string().optional(),
   inStock: z.string().optional(),
-  fulfillment: z.object({
-    curbside: z.boolean().optional(),
-    delivery: z.boolean().optional(),
-    inStore: z.boolean().optional(),
-    shipToHome: z.boolean().optional(),
-  }).optional(),
+  fulfillment: z
+    .object({
+      curbside: z.boolean().optional(),
+      delivery: z.boolean().optional(),
+      inStore: z.boolean().optional(),
+      shipToHome: z.boolean().optional(),
+    })
+    .optional(),
   aisle: z.object({ description: z.string().optional(), number: z.string().optional() }).optional(),
 };
 
@@ -143,9 +166,7 @@ function isInStockLevel(stockLevel: string | undefined): boolean {
   return stockLevel === 'HIGH' || stockLevel === 'LOW';
 }
 
-function stockLevelToInStock(
-  stockLevel: string | undefined
-): boolean | undefined {
+function stockLevelToInStock(stockLevel: string | undefined): boolean | undefined {
   if (stockLevel === 'HIGH' || stockLevel === 'LOW') return true;
   if (stockLevel === 'TEMPORARILY_OUT_OF_STOCK') return false;
   return undefined;
@@ -182,7 +203,8 @@ export function registerTools(server: McpServer, kroger: KrogerService): void {
   server.registerTool(
     'search_products',
     {
-      description: 'Search for products at a Kroger-owned store by name, brand, or description. Works with Kroger, Ralphs, Fred Meyer, King Soopers, Harris Teeter, Food 4 Less, Fry\'s, Smith\'s, and other Kroger banners.',
+      description:
+        "Search for products at a Kroger-owned store by name, brand, or description. Works with Kroger, Ralphs, Fred Meyer, King Soopers, Harris Teeter, Food 4 Less, Fry's, Smith's, and other Kroger banners.",
       inputSchema: SearchProductsInput,
       // outputSchema omitted: empty results and errors return plain text
       annotations: {
@@ -220,7 +242,9 @@ export function registerTools(server: McpServer, kroger: KrogerService): void {
 
         if (merged.length === 0) {
           return {
-            content: [{ type: 'text' as const, text: `No products found for "${term}" at this store.` }],
+            content: [
+              { type: 'text' as const, text: `No products found for "${term}" at this store.` },
+            ],
           };
         }
 
@@ -313,7 +337,8 @@ export function registerTools(server: McpServer, kroger: KrogerService): void {
   server.registerTool(
     'find_stores',
     {
-      description: 'Find Kroger-owned stores near a ZIP code. Returns Kroger, Ralphs, Fred Meyer, King Soopers, Harris Teeter, Food 4 Less, Fry\'s, Smith\'s, and other Kroger banners.',
+      description:
+        "Find Kroger-owned stores near a ZIP code. Returns Kroger, Ralphs, Fred Meyer, King Soopers, Harris Teeter, Food 4 Less, Fry's, Smith's, and other Kroger banners.",
       inputSchema: FindStoresInput,
       // outputSchema omitted: empty results and errors return plain text
       annotations: {
@@ -362,7 +387,8 @@ export function registerTools(server: McpServer, kroger: KrogerService): void {
   server.registerTool(
     'get_store',
     {
-      description: 'Get detailed information about a specific store including hours and departments',
+      description:
+        'Get detailed information about a specific store including hours and departments',
       inputSchema: GetStoreInput,
       // outputSchema omitted: errors return plain text
       annotations: {
@@ -400,7 +426,8 @@ export function registerTools(server: McpServer, kroger: KrogerService): void {
   server.registerTool(
     'add_to_cart',
     {
-      description: "Add items to the user's Kroger cart. Requires user authentication. Note: the cart is account-level, not store-specific — items go to the user's single cart regardless of which store was searched.",
+      description:
+        "Add items to the user's Kroger cart. Requires user authentication. Note: the cart is account-level, not store-specific — items go to the user's single cart regardless of which store was searched.",
       inputSchema: AddToCartInput,
       // outputSchema omitted: auth errors return plain text
       annotations: {

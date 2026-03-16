@@ -1,8 +1,8 @@
 {
   "mcpServers": {
     "pantry-agent": {
-      "command": "npm",
-      "args": ["exec", "--yes", "--", "@blanxlait/pantry-agent"]
+      "command": "node",
+      "args": ["dist/index.js"]
     }
   }
 }

@@ -8,7 +8,10 @@ import { createTestClient, createMockKrogerService, type ToolResult } from './te
 
 describe('MCP Tools', () => {
   let client: Client;
-  let callTool: (params: { name: string; arguments: Record<string, unknown> }) => Promise<ToolResult>;
+  let callTool: (params: {
+    name: string;
+    arguments: Record<string, unknown>;
+  }) => Promise<ToolResult>;
   let mockKroger: ReturnType<typeof createMockKrogerService>;
 
   beforeEach(async () => {
@@ -143,7 +146,9 @@ describe('MCP Tools', () => {
           upc: '0001111041709',
           description: 'Out of Stock Soda',
           brand: 'BrandA',
-          items: [{ price: { regular: 1.99 }, inventory: { stockLevel: 'TEMPORARILY_OUT_OF_STOCK' } }],
+          items: [
+            { price: { regular: 1.99 }, inventory: { stockLevel: 'TEMPORARILY_OUT_OF_STOCK' } },
+          ],
         },
         {
           productId: 'unk-1',
@@ -211,7 +216,9 @@ describe('MCP Tools', () => {
               upc: '0001111041713',
               description: 'Page 1 Product',
               brand: 'BrandE',
-              items: [{ price: { regular: 1.99 }, inventory: { stockLevel: 'TEMPORARILY_OUT_OF_STOCK' } }],
+              items: [
+                { price: { regular: 1.99 }, inventory: { stockLevel: 'TEMPORARILY_OUT_OF_STOCK' } },
+              ],
             },
           ],
           meta: { pagination: { start: 0, limit: 1, total: 2 } },
@@ -325,14 +332,24 @@ describe('MCP Tools', () => {
           locationId: '01400943',
           name: 'Kroger',
           chain: 'KROGER',
-          address: { addressLine1: '123 Main St', city: 'Cincinnati', state: 'OH', zipCode: '45202' },
+          address: {
+            addressLine1: '123 Main St',
+            city: 'Cincinnati',
+            state: 'OH',
+            zipCode: '45202',
+          },
           phone: '513-555-1234',
         },
         {
           locationId: '01400944',
           name: 'Kroger Marketplace',
           chain: 'KROGER',
-          address: { addressLine1: '456 Oak Ave', city: 'Cincinnati', state: 'OH', zipCode: '45203' },
+          address: {
+            addressLine1: '456 Oak Ave',
+            city: 'Cincinnati',
+            state: 'OH',
+            zipCode: '45203',
+          },
         },
       ];
 

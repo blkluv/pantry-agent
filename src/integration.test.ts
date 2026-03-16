@@ -173,15 +173,15 @@ describe('Integration Tests', () => {
             }),
         });
 
-      await client.callTool({
+      (await client.callTool({
         name: 'search_products',
         arguments: { term: 'test1', locationId: '01400943' },
-      }) as ToolResult;
+      })) as ToolResult;
 
-      await client.callTool({
+      (await client.callTool({
         name: 'search_products',
         arguments: { term: 'test2', locationId: '01400943' },
-      }) as ToolResult;
+      })) as ToolResult;
 
       // Verify token was only fetched once
       const tokenCalls = mockFetch.mock.calls.filter((call) =>
@@ -190,9 +190,7 @@ describe('Integration Tests', () => {
       expect(tokenCalls).toHaveLength(1);
 
       // Verify both product searches used the same token
-      const productCalls = mockFetch.mock.calls.filter((call) =>
-        call[0].includes('/products')
-      );
+      const productCalls = mockFetch.mock.calls.filter((call) => call[0].includes('/products'));
       expect(productCalls).toHaveLength(2);
       expect(productCalls[0][1]?.headers?.Authorization).toBe('Bearer app-token-123');
       expect(productCalls[1][1]?.headers?.Authorization).toBe('Bearer app-token-123');

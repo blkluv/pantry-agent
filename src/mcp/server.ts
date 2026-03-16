@@ -21,13 +21,12 @@ export function createMcpServer(kroger: KrogerService): McpServer {
 Workflow:
 1. Find the user's nearest store with find_stores (ask for ZIP code if needed). The response includes the chain name (Kroger, Ralphs, etc.).
 2. Use the locationId from find_stores for all product searches.
-3. search_products and get_product work without authentication and return pricing, stock, fulfillment, and aisle info.
-4. Use preview_cart with a locationId to validate item pricing and availability before adding to cart — no authentication needed.
-5. Before cart or profile operations, call check_auth_status to see if the user is already authenticated.
-6. If not authenticated, call kroger_start_auth to get the authorization URL and present it to the user. Wait for them to confirm login, then retry.
-7. Always confirm with the user before adding items to their cart.
-8. The cart is account-level, not store-specific. Items added via any store go to the user's single Kroger cart. The user picks their fulfillment store separately on kroger.com or the app.`,
-    },
+3. search_products and get_product work without authentication.
+4. add_to_cart and get_profile require Kroger login — if auth is needed, a browser window opens automatically. Tell the user to complete login and retry.
+5. Always confirm with the user before adding items to their cart.
+6. Show prices and stock availability when displaying products.
+7. The cart is account-level, not store-specific. Items added via any store go to the user's single Kroger cart. The user picks their fulfillment store separately on kroger.com or the app.`,
+    }
   );
 
   // Register tools

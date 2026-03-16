@@ -103,9 +103,7 @@ describe('MCP Prompts', () => {
 
   describe('Unknown Prompt', () => {
     it('should throw error for unknown prompt name', async () => {
-      await expect(
-        client.getPrompt({ name: 'unknown-prompt' })
-      ).rejects.toThrow();
+      await expect(client.getPrompt({ name: 'unknown-prompt' })).rejects.toThrow();
     });
   });
 

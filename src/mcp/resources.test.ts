@@ -61,9 +61,7 @@ describe('MCP Resources', () => {
 
   describe('Unknown Resource', () => {
     it('should throw error for unknown resource URI', async () => {
-      await expect(
-        client.readResource({ uri: 'kroger://unknown/resource' })
-      ).rejects.toThrow();
+      await expect(client.readResource({ uri: 'kroger://unknown/resource' })).rejects.toThrow();
     });
   });
 });
